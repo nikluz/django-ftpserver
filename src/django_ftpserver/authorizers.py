@@ -20,13 +20,13 @@ class FTPAccountAuthorizer(object):
     def has_user(self, username):
         """return True if exists user.
         """
-        return self.model.objects.filter(user__username=username).exists()
+        return self.model.objects.filter(user__email=username).exists()
 
     def get_account(self, username):
         """return user by username.
         """
         try:
-            account = self.model.objects.get(user__username=username)
+            account = self.model.objects.get(user__email=username)
         except self.model.DoesNotExist:
             return None
         return account
