@@ -29,7 +29,8 @@ class FTPUserGroup(models.Model):
 @python_2_unicode_compatible
 class FTPUserAccount(models.Model):
     username = models.CharField(
-        _("Username"), max_length=64, null=False, blank=False)
+        _("Username"), max_length=64, null=False, blank=False,
+        unique=True)
     password = models.CharField(
         _("Password"), max_length=64, null=False, blank=False)
     group = models.ForeignKey(
