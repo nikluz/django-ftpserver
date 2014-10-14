@@ -45,11 +45,7 @@ class FTPUserAccount(models.Model):
         return self.username
 
     def get_username(self):
-        try:
-            user = self.user
-        except ObjectDoesNotExist:
-            user = None
-        return user and user.username or ""
+        return self.username or ""
 
     def update_last_login(self, value=None):
         self.last_login = value or timezone.now()
