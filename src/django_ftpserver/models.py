@@ -41,11 +41,7 @@ class FTPUserAccount(models.Model):
         _("Home directory"), max_length=1024, null=True, blank=True)
 
     def __str__(self):
-        try:
-            user = self.user
-        except ObjectDoesNotExist:
-            user = None
-        return "{}".format(user)
+        return self.username
 
     def get_username(self):
         try:
