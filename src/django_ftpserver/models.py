@@ -28,9 +28,10 @@ class FTPUserGroup(models.Model):
 
 @python_2_unicode_compatible
 class FTPUserAccount(models.Model):
-    user = models.OneToOneField(
-        getattr(settings, 'AUTH_USER_MODEL', None) or 'auth.User',
-        verbose_name=_("User"))
+    username = models.CharField(
+        _("Username"), max_length=64, null=False, blank=False)
+    password = models.CharField(
+        _("Password"), max_length=64, null=False, blank=False)
     group = models.ForeignKey(
         FTPUserGroup, verbose_name=_("FTP user group"), null=False,
         blank=False)

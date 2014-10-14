@@ -1,7 +1,7 @@
 import os
 import pwd
 
-from django.contrib.auth import authenticate
+# from django.contrib.auth import authenticate
 from pyftpdlib.authorizers import AuthenticationFailed
 
 from . import models
@@ -20,13 +20,17 @@ class FTPAccountAuthorizer(object):
     def has_user(self, username):
         """return True if exists user.
         """
-        return self.model.objects.filter(user__email=username).exists()
+        return self.model.objects.filter(username=username).exists()
 
-    def get_account(self, username):
+    def get_account(self, username, password=None):
         """return user by username.
         """
         try:
-            account = self.model.objects.get(user__email=username)
+            if password is None:
+                account = self.model.objects.get(username=username)
+            else:
+                account = self.model.objects.get(username=username,
+                                                 password=password)
         except self.model.DoesNotExist:
             return None
         return account
@@ -34,9 +38,8 @@ class FTPAccountAuthorizer(object):
     def validate_authentication(self, username, password, handler):
         """authenticate user with password
         """
-        user = authenticate(username=username, password=password)
-        account = self.get_account(username)
-        if not (user and account):
+        account = self.get_account(username=username, password=password)
+        if not account:
             raise AuthenticationFailed("Authentication failed.")
 
     def get_home_dir(self, username):
