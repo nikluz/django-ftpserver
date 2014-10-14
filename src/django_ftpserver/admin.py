@@ -13,8 +13,8 @@ class FTPUserGroupAdmin(admin.ModelAdmin):
 class FTPUserAccountAdmin(admin.ModelAdmin):
     """Admin class for FTPUserAccountAdmin
     """
-    list_display = ('user', 'group', 'last_login')
-    search_fields = ('user', 'group', 'last_login')
+    list_display = ('username', 'group', 'last_login')
+    search_fields = ('username', 'group', 'last_login')
 
 admin.site.register(models.FTPUserGroup, FTPUserGroupAdmin)
 admin.site.register(models.FTPUserAccount, FTPUserAccountAdmin)
