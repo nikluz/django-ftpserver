@@ -1,10 +1,11 @@
 import os
 import pwd
 
-# from django.contrib.auth import authenticate
 from pyftpdlib.authorizers import AuthenticationFailed
 
 from . import models
+from psycopg2 import OperationalError, InterfaceError
+from django.conf import settings
 
 
 class FTPAccountAuthorizer(object):
@@ -38,7 +39,15 @@ class FTPAccountAuthorizer(object):
     def validate_authentication(self, username, password, handler):
         """authenticate user with password
         """
-        account = self.get_account(username=username, password=password)
+        try:
+            account = self.get_account(username=username, password=password)
+        except (OperationalError, InterfaceError):
+            cmd = "cd ~ && source ~/envs/automobi/bin/activate && \
+                   cd src/automobi && kill $(ps aux | grep '[p]ython \
+                   ./manage.py ftpserver' | awk '{print $2}') && ./manage.py \
+                   ftpserver %s:%s --daemonize" % (settings.FTP_IP,
+                                                   settings.FTP_PORT)
+            os.system(cmd)
         if not account:
             raise AuthenticationFailed("Authentication failed.")
 
