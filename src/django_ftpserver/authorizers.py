@@ -42,10 +42,12 @@ class FTPAccountAuthorizer(object):
         try:
             account = self.get_account(username=username, password=password)
         except (OperationalError, InterfaceError):
-            cmd = "cd ~ && source ~/envs/automobi/bin/activate && \
-                   cd src/automobi && kill $(ps aux | grep '[p]ython \
+            cmd = "cd ~ && source %s && \
+                   cd %s && kill $(ps aux | grep '[p]ython \
                    ./manage.py ftpserver' | awk '{print $2}') && ./manage.py \
-                   ftpserver %s:%s --daemonize" % (settings.FTP_IP,
+                   ftpserver %s:%s --daemonize" % (settings.ENV_PATH,
+                                                   settings.PRJ_PATH,
+                                                   settings.FTP_IP,
                                                    settings.FTP_PORT)
             os.system(cmd)
         if not account:
