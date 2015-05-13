@@ -58,7 +58,12 @@ class FTPUserAccount(models.Model):
         else:
             directory = os.path.join(
                 os.path.dirname(os.path.expanduser('~')), '{username}')
-        return directory.format(username=self.get_username())
+        directory = directory.format(username=self.get_username())
+
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        return directory
 
     def has_perm(self, perm, path):
         return perm in self.get_perms()
